@@ -71,12 +71,12 @@ if __name__ == '__main__':
         model: MGModel = MGModel(
             in_channels=in_channels,
             out_channels=out_channels,
-            first_layer_type=config.model.first_layer_type,
-            second_layer_type=config.model.second_layer_type,
+            num_layers=config.model.num_layers,
+            layer_types=config.model.layer_types,
             hidden_channels=config.model.hidden_channels,
             dropout_rate=config.model.dropout_rate,
-            gat_heads=1,
-            transformer_heads=1,
+            gat_heads=config.model.gat_heads,
+            transformer_heads=config.model.transformer_heads
         )
 
         logger.info(f'Model Architecture {model}')
@@ -92,6 +92,7 @@ if __name__ == '__main__':
         try:
             device: torch.device = get_device()
             logger.info(f"Using device: {device}")
+            model.to(device) # Move the model to the device here
         except DeviceInitializationError as e:
             logger.error(f"Device initialization failed: {e}")
             raise
@@ -136,6 +137,3 @@ if __name__ == '__main__':
         logger.error(f"Config file not found at {config_path}")
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
-
-
-        
